@@ -4,6 +4,9 @@ import cv2
 import pytesseract
 import pyscreenshot as sc
 import random
+import datetime
+
+HORDES = 5
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
@@ -47,32 +50,53 @@ def screen_check():
     print('####\nNO SHINY DETECTED\n######')
     return True
 
+def save_encounters(enc):
+    with open('encounters.txt',"w") as f:
+        f.write(str(enc))
 
-print('Program will start in 5...',end='')
-time.sleep(1)
-print('4... ',end='')
-time.sleep(1)
-print('3... ',end='')
-time.sleep(1)
-print('2... ',end='')
-time.sleep(1)
-print('1... ')
-time.sleep(1)
-print('Program started')
+def shiny_enc(enc):
+    with open('shiny.txt',"w") as f:
+        f.write(f'Shiny encountered after {enc} encounters')
+
+def timestamps(stop,start):
+    with open('time.txt',"w") as f:
+        f.write(f'{start.date()};{(stop-start).seconds}')
+
+with open('encounters.txt') as f:
+    encounters = int(f.read())
+
+print('Program will start in 5 seconds ',end='')
+time.sleep(5)
+program_start = datetime.datetime.now()
 
 running = True
+print(f'Program started on {program_start}')
 
-while running:
-    for i in range(6):
-        sweetscent()
-        time.sleep(random.uniform(12.6,13.2))
-        if screen_check():
-            run()
-            time.sleep(random.uniform(2.0,2.3))
-        else:
-            running = False
-            quit()
-    leppas()
+try:
+    while running:
+        for i in range(6):
+            sweetscent()
+            encounters+=HORDES
+            time.sleep(random.uniform(12.6,13.2))
+            if screen_check():
+                run()
+                time.sleep(random.uniform(2.0,2.3))
+            else:
+                running = False
+                save_encounters(encounters)
+                shiny_enc(encounters)
+                program_stop = datetime.datetime.now()
+                print(f'program stopped at {program_stop}')
+                timestamps(program_stop,program_start)
+        leppas()
+except KeyboardInterrupt:
+    print('program stopped')
+    with open('encounters.txt',"w") as f:
+        f.write(str(encounters))
+    program_stop = datetime.datetime.now()
+    print(f'program stopped at {program_stop}')
+    timestamps(program_stop,program_start)
+
 
 
 
