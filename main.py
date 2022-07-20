@@ -3,7 +3,7 @@ import time
 import cv2
 import pytesseract
 import pyscreenshot as sc
-
+import random
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
@@ -26,13 +26,13 @@ def run():
 def leppas():
     keyboard.press(Key.f2)
     keyboard.release(Key.f2)
-    time.sleep(1.5)
+    time.sleep(random.uniform(1.5,1.7))
     keyboard.press('z')
     keyboard.release('z')
-    time.sleep(.5)
+    time.sleep(random.uniform(0.4,.6))
     keyboard.press('z')
     keyboard.release('z')
-    time.sleep(.5)
+    time.sleep(random.uniform(0.4,.6))
 
 def screen_check():
     im = sc.grab(bbox=(1080, 90, 1850, 210))
@@ -65,10 +65,10 @@ running = True
 while running:
     for i in range(6):
         sweetscent()
-        time.sleep(13)
+        time.sleep(random.uniform(12.6,13.2))
         if screen_check():
             run()
-            time.sleep(2.2)
+            time.sleep(random.uniform(2.0,2.3))
         else:
             running = False
             quit()
